@@ -15,9 +15,6 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = secret.getClientID; // Your client id
-var client_secret = secret.getClientSecret; // Your secret
-var redirect_uri = '/callback'; // Your redirect uri
 var client_id = secret.getClientId(); // Your client id
 var client_secret = secret.getClientSecret(); // Your secret
 var redirect_uri = secret.getRedirectUri(); // Your redirect uri
