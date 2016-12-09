@@ -7,10 +7,13 @@
  * https://developer.spotify.com/web-api/authorization-guide/#client_credentials_flow
  */
 
+var Secret = require('../../DAL/secret.js').Secret;
+var secret = new Secret(); 
+
 var request = require('request'); // "Request" library
 
-var client_id = 'b32fc738eeee408d906cf084d20359c9'; // Your client id
-var client_secret = 'b32fc738eeee408d906cf084d20359c9'; // Your secret
+var client_id = secret.getClientId(); // Your client id
+var client_secret = secret.getClientSecret(); // Your secret
 
 // your application requests authorization
 var authOptions = {

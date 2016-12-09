@@ -6,16 +6,18 @@
  * For more information, read
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
-var secret = require('../../DAL/secret.js');
+var Secret = require('../../DAL/secret.js').Secret;
+var secret = new Secret();
+var port = 3000; 
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = "ID HERE"; // Your client id
-var client_secret = "SECRET HERE"; // Your secret
-var redirect_uri = '/callback'; // Your redirect uri
+var client_id = secret.getClientId(); // Your client id
+var client_secret = secret.getClientSecret(); // Your secret
+var redirect_uri = secret.getRedirectUri(); // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -85,6 +87,9 @@ app.get('/callback', function(req, res) {
       json: true
     };
 
+    /**
+     * After auth and you are logged in.
+     */
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
 
@@ -142,5 +147,5 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-console.log('Listening on C9 port');
-app.listen(process.env.PORT, process.env.IP);
+console.log('Listening on port'+port);
+app.listen(port);
