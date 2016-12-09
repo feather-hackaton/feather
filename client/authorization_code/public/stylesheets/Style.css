@@ -4,7 +4,7 @@ body{
   background-color: rgba(0,0,0,0.5);
   background-blend-mode: darken;
   background-image: url("../pictures/Autumn.jpg");
-  overflow: hidden;
+  overflow: scroll-y;
 }
 #subtitle{
   margin:0;
@@ -32,7 +32,7 @@ body{
   margin-right: auto;
 }
 
-#logindiv{
+#login{
   text-align: center;
   height:5vh;
   width: 60vh;

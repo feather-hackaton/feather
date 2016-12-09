@@ -1,26 +1,8 @@
-// Docs at http://simpleweatherjs.com
 
-/* Does your browser support geolocation? */
-if ("geolocation" in navigator) {
-  $('.js-geolocation').show(); 
-} else {
-  $('.js-geolocation').hide();
-}
-
-/* Where in the world are you? */
-$('.js-geolocation').on('click', function() {
-  navigator.geolocation.getCurrentPosition(function(position) {
-    loadWeather(position.coords.latitude+','+position.coords.longitude); //load weather using your lat/lng coordinates
-  });
-});
-
-/* 
-* Test Locations
-* Austin lat/long: 30.2676,-97.74298
-* Austin WOEID: 2357536
-*/
 $(document).ready(function() {
-  loadWeather('Seattle',''); //@params location, woeid
+  navigator.geolocation.getCurrentPosition(function(position) {
+  loadWeather(position.coords.latitude+','+position.coords.longitude);
+  });
 });
 
 function loadWeather(location, woeid) {
@@ -29,10 +11,11 @@ function loadWeather(location, woeid) {
     woeid: woeid,
     unit: 'c',
     success: function(weather) {
+      console.log("Väder: " + weather.city + " | " + weather.temp + "C")
       html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
       html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
       html += '<li class="currently">'+weather.currently+'</li>';
-      html += '<li>'+weather.alt.temp+'&deg;C</li></ul>';  
+      html += '<li>'+weather.temp+'&deg;C</li></ul>';  
       
       $("#weather").html(html);
     },

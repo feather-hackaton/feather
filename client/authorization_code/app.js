@@ -8,7 +8,7 @@
  */
 var Secret = require('../../DAL/secret.js').Secret;
 var secret = new Secret();
-var port = 3000;
+var port = 3001;
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
@@ -92,7 +92,7 @@ app.get('/callback', function(req, res) {
      */
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-
+        
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
