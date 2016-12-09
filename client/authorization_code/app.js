@@ -8,13 +8,16 @@
  */
 var Secret = require('../../DAL/secret.js').Secret;
 var secret = new Secret();
-var port = 3000; 
+var port = 3000;
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
+var client_id = secret.getClientID; // Your client id
+var client_secret = secret.getClientSecret; // Your secret
+var redirect_uri = '/callback'; // Your redirect uri
 var client_id = secret.getClientId(); // Your client id
 var client_secret = secret.getClientSecret(); // Your secret
 var redirect_uri = secret.getRedirectUri(); // Your redirect uri
@@ -147,5 +150,6 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+app.listen(3000);
 console.log('Listening on port'+port);
 app.listen(port);
