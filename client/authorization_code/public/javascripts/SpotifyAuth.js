@@ -19,7 +19,7 @@
         userProfileTemplate = Handlebars.compile(userProfileSource),
         userProfilePlaceholder = document.getElementById('user-profile');
 
-  
+
 
     var params = getHashParams();
 
@@ -31,15 +31,6 @@
         alert('There was an error during the authentication');
     } else {
         if (access_token) {
-        document.body.style.backgroundImage = "none";
-        //document.body.style.backgroundColor = "black";
-        document.getElementById("maindiv").style.backgroundColor = "black";
-        document.getElementById("maindiv").style.border = "solid #84bd00 5px";
-        document.getElementById("subtitle").style.color = "#84bd00";
-        document.getElementById("title").style.color = "#84bd00";
-        
-
-        
         $.ajax({
             url: 'https://api.spotify.com/v1/me',
             headers: {
@@ -58,7 +49,6 @@
             $('#loggedin').hide();
         }
 
-      
+
     }
     })();
-    
