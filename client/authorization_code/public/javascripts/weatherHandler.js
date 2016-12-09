@@ -12,10 +12,11 @@ function loadWeather(location, woeid) {
     unit: 'c',
     success: function(weather) {
       console.log("Väder: " + weather.city + " | " + weather.temp + "C")
-      html = '<h2><i class="icon-'+weather.code+'"></i> '+weather.temp+'&deg;'+weather.units.temp+'</h2>';
-      html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
-      html += '<li class="currently">'+weather.currently+'</li>';
-      html += '<li>'+weather.temp+'&deg;C</li></ul>';  
+      html = '<p>'+weather.city+'</p>';
+      html += '<p>'+weather.temp+'&deg;C</p>';  
+       
+      html += '<p>'+weather.currently+'</p>';
+      html += '<i class="material-icons prefix">'+returnWeatherIcon(weather.currently)+'</i>'; 
       
       $("#weather").html(html);
     },
@@ -23,4 +24,21 @@ function loadWeather(location, woeid) {
       $("#weather").html('<p>'+error+'</p>');
     }
   });
+}
+
+function returnWeatherIcon(desc){
+
+    var checkFair = /(fair|hot|sunny)/i;
+    var checkClouds = /cloudy/i;
+    var checkRain = /(rain|drizzle|shower|thunder)/i;
+    var checkFog = /(haze|foggy|smoky|fog)/i;
+ 
+    if(checkFair.test(desc))
+        return "wb sunny"
+    if(checkClouds.test(desc))
+        return "cloud"
+    if(checkRain.test(desc))
+        return "grain"
+    if(checkFog.test(desc))
+        return "cloud"
 }
