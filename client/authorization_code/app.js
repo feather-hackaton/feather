@@ -15,9 +15,9 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = secret.getClientID; // Your client id
-var client_secret = secret.getClientSecret; // Your secret
-var redirect_uri = '/callback'; // Your redirect uri
+var client_id = secret.getClientId(); // Your client id
+var client_secret = secret.getClientSecret(); // Your secret
+var redirect_uri = secret.getRedirectUri(); // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -87,6 +87,9 @@ app.get('/callback', function(req, res) {
       json: true
     };
 
+    /**
+     * After auth and you are logged in.
+     */
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
 
