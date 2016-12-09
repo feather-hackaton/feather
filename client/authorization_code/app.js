@@ -6,15 +6,15 @@
  * For more information, read
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
-var secret = require('../../DAL/secret.js');
-
+var Secret = require('../../DAL/secret.js').Secret;
+var secret = new Secret();
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = "ID HERE"; // Your client id
-var client_secret = "SECRET HERE"; // Your secret
+var client_id = secret.getClientID; // Your client id
+var client_secret = secret.getClientSecret; // Your secret
 var redirect_uri = '/callback'; // Your redirect uri
 
 /**
@@ -142,5 +142,4 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-console.log('Listening on C9 port');
-app.listen(process.env.PORT, process.env.IP);
+app.listen(3000);
