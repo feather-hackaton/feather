@@ -19,7 +19,7 @@
         userProfileTemplate = Handlebars.compile(userProfileSource),
         userProfilePlaceholder = document.getElementById('user-profile');
 
-  
+        
 
     var params = getHashParams();
 
