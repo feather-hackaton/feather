@@ -8,16 +8,13 @@
  */
 var Secret = require('../../DAL/secret.js').Secret;
 var secret = new Secret();
-var port = 3000;
+var port = 3001;
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 
-var client_id = secret.getClientID; // Your client id
-var client_secret = secret.getClientSecret; // Your secret
-var redirect_uri = '/callback'; // Your redirect uri
 var client_id = secret.getClientId(); // Your client id
 var client_secret = secret.getClientSecret(); // Your secret
 var redirect_uri = secret.getRedirectUri(); // Your redirect uri
@@ -95,7 +92,7 @@ app.get('/callback', function(req, res) {
      */
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-
+        
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
