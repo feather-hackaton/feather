@@ -4,13 +4,26 @@ body{
   background-color: rgba(0,0,0,0.5);
   background-blend-mode: darken;
   background-image: url("../pictures/Autumn.jpg");
-  overflow: scroll-y;
+  overflow: hidden;
 }
 #subtitle{
   margin:0;
   color: white;
   font-weight: bold;
   font-size: 16px;
+}
+
+#weatherinfo{
+  margin:3%;
+  color: white;
+  font-size: 26px;
+}
+
+
+#usertext{
+  margin:3%;
+  color: white;
+  font-size: 26px;
 }
 
 
@@ -44,4 +57,10 @@ body{
 #loginbutton{
   font-weight: bold;
   border: solid #fff 3px;
+}
+
+#spotifyplayer{
+  background-color: rgba(0,0,0,0.7);
+  background-blend-mode: darken;
+  height: calc(100vh - 35vh);
 }
