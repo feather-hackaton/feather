@@ -8,9 +8,7 @@
  */
 var axios = require('axios');
 const fetch = require('isomorphic-fetch');
-var Weather = require('./public/javascripts/Weather.js').Weather;
 var Secret = require('../../DAL/secret.js').Secret;
-var weather = new Weather();
 var secret = new Secret();
 var port = 3001;
 
@@ -107,37 +105,19 @@ app.get('/callback', function (req, res) {
         };
 
 
-
+        var id1;
+        
         // use the access token to access the Spotify Web API
         request.get(options, function (error, response, body) {
-
-          var id = response.body['id'];
-
-          console.log("detta är id :" + id);
-
-          if (id != null) {
-            console.log("Detta är inte null");
-            createPlaylist(id, "feather", access_token, function (playlist) {
-
-              console.log('created playlist', playlist);
-              console.log("Vädret är följande:" + weather.getWeather());
-              /*addTracksToPlaylist(id, playlist, function (r) {
-                console.log('tracks added.');
-               
-              });*/
-            });
-          }
+          id1 = response.body['id']
+        console.log("hadad: " + id1);
         });
 
-
-
-
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+        res.redirect('/signed_in#' +
+        querystring.stringify({
+          id: id1
+        }));
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -172,52 +152,74 @@ app.get('/refresh_token', function (req, res) {
   });
 });
 
+app.get('/signed_in', function (req, res) {
+  console.log("res: "+ res);
+  console.log("req: "+ req)
+  var id = res.body['id'];
+
+  console.log("detta är id :" + id);
+
+  if (id != null) {
+    console.log("Detta är inte null");
+    createPlaylist(id, "feather", access_token, function (playlist) {
+
+      console.log('created playlist', playlist);
+      console.log("Vädret är :");
+      /*addTracksToPlaylist(id, playlist, function (r) {
+        console.log('tracks added.');
+       
+      });*/
+    });
+  }
+
+});
+
 // SKAPA SPELLISTA
 function createPlaylist(username, name, token, callback) {
-  console.log('createPlaylist', username, "feather");
-  var url = 'https://api.spotify.com/v1/users/' + username +
-    '/playlists';
+    console.log('createPlaylist', username, "feather");
+    var url = 'https://api.spotify.com/v1/users/' + username +
+      '/playlists';
 
-  console.log(token)
+    console.log(token)
 
-  fetch(url, {
-    method: 'POST',
-    body: JSON.stringify({
-      name: 'Feather-Feel the weather',
-      public: 'true'
-    }),
-    headers: {
-      'Authorization': 'Bearer ' + token,
-      'Content-Type': 'application/json',
-    }
-  })
-    .then(res => res.json())
-    .then(json => console.log(json))
-    .catch(err => console.log(err))
-}
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Feather-Feel the weather',
+        public: 'true'
+      }),
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(res => res.json())
+      .then(json => callback(json))
+      .catch(err => console.log(err))
+  }
 
 // LÄGG TILL LÅTAR I SPELLISTA
 function addTracksToPlaylist(username, playlist, tracks, callback) {
-  console.log('addTracksToPlaylist', username, playlist, tracks);
-  var url = 'https://api.spotify.com/v1/users/' + username +
-    '/playlists/' + playlist +
-    '/tracks';
+    console.log('addTracksToPlaylist', username, playlist, tracks);
+    var url = 'https://api.spotify.com/v1/users/' + username +
+      '/playlists/' + playlist +
+      '/tracks';
 
-  fetch(url, {
-    method: 'POST',
-    body: JSON.stringify({
-      name: 'Feather-Feel the weather',
-      public: 'true'
-    }),
-    headers: {
-      'Authorization': 'Bearer ' + token,
-      'Content-Type': 'application/json',
-    }
-  })
-    .then(res => res.json())
-    .then(json => console.log(json))
-    .catch(err => console.log(err))
-}
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'Feather-Feel the weather',
+        public: 'true'
+      }),
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(res => res.json())
+      .then(json => console.log(json))
+      .catch(err => console.log(err))
+  }
 
 
 /*$.ajax(url, {

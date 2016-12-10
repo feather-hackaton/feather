@@ -1,13 +1,9 @@
 
 $(document).ready(function() {
-  weather();
-});
-
-var getWeather = () => {
   navigator.geolocation.getCurrentPosition(function(position) {
     return loadWeather(position.coords.latitude+','+position.coords.longitude);
   });
-}
+});
 
 function loadWeather(location, woeid) {
   $.simpleWeather({
@@ -51,5 +47,3 @@ function returnWeatherIcon(desc){
         document.body.style.backgroundImage="url('../Pictures/Cloudy.jpg')";
         return "cloud"
 }
-
-export{getWeather};
