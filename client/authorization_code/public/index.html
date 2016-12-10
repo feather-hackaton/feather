@@ -14,22 +14,24 @@
 <body>
   <div id="container" class="mdl-grid">
     <div id="user-profile" class="mdl-cell mdl-cell--3-col"></div>
-    <div id="maindiv" class="mdl-cell mdl-cell--6-col"> 
+    <div id="maindiv" class="mdl-cell mdl-cell--6-col">
       <h1 id="title">Feather</h1>
       <p id="subtitle">Feel The Weather</p>
       <!--Displays weather -->
     </div>
     <div id="weather" class="mdl-cell mdl-cell--3-col"></div>
-    </div>
+   
       <div id="login">
         <a href="/login" id="loginbutton" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">Log in with Spotify</a>
       </div>
+      </div>
     </div>
-   
-      
+
+
     <div id="loggedin">
       <!--current username-->
-     
+       <div id="spotifyplayer" class="mdl-cell mdl-cell--6-col mdl-cell--3-offset">
+      </div>
       <!--spotify userlogo-->
       <div id="oauth"></div>
       <!--User information, should not be displayed-->
@@ -37,8 +39,8 @@
     </div>
   </div>
 
-  <script id="user-profile-template" type="text/x-handlebars-template">      
-        <p>Welcome {{display_name}}!</p>
+  <script id="user-profile-template" type="text/x-handlebars-template">
+        <p id="usertext">Welcome {{display_name}}!</p>
         <img class="media-object" width="150" src="{{images.0.url}}" />
 </script>
 

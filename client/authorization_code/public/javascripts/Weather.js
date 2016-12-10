@@ -1,13 +1,13 @@
+"use strict";
 
-$(document).ready(function() {
-  weather();
-});
 
-var getWeather = () => {
-  navigator.geolocation.getCurrentPosition(function(position) {
-    return loadWeather(position.coords.latitude+','+position.coords.longitude);
-  });
-}
+function Weather() {}
+   
+   Weather.prototype.getWeather = function() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        return loadWeather(position.coords.latitude+','+position.coords.longitude);
+    });
+   };
 
 function loadWeather(location, woeid) {
   $.simpleWeather({
@@ -52,4 +52,4 @@ function returnWeatherIcon(desc){
         return "cloud"
 }
 
-export{getWeather};
+exports.Weather = Weather;
