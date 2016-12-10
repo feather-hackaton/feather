@@ -12,7 +12,7 @@ var Secret = require('../../DAL/secret.js').Secret;
 var weather = new Weather();
 var secret = new Secret();
 
-var port = 3001;
+var port = 3000;
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
@@ -108,15 +108,14 @@ app.get('/callback', function (req, res) {
         // use the access token to access the Spotify Web API
         request.get(options, function (error, response, body) {
 
-          var id = response.body['id'];
+          var userId = response.body['id'];
 
-          if (id != null) {
-            createPlaylist(id, "Feather-Feel the weather", access_token, function (playlist) {
+          if (userId != null) {
+            createPlaylist(userId, "Feather-Feel the weather", access_token, function (playlist) {
               console.log('created playlist', playlist);
               console.log("Vädret är följande:" );
-              addTracksToPlaylist(id, playlist, access_token, function (r) {
+              addTracksToPlaylist(userId, playlist, access_token, function (r) {
                 console.log('tracks added.');
-               
               });
             });
           }
@@ -163,14 +162,13 @@ app.get('/refresh_token', function (req, res) {
 });
 
 // SKAPA SPELLISTA
-function createPlaylist(username, name, token, callback) { 
-  console.log('PLAYLIST: ', username, "Feather-Feel the weather");
-  var url = 'https://api.spotify.com/v1/users/' + username + '/playlists';
+function createPlaylist(username, playlistName, token, callback) { 
+  var url = 'https://api.spotify.com/v1/users/' + username + '/playlists/';
 
   fetch(url, {
     method: 'POST',
     body: JSON.stringify({
-      name: name,
+      name: playlistName,
       public: 'true'
     }),
     headers: {
@@ -178,22 +176,20 @@ function createPlaylist(username, name, token, callback) {
       'Content-Type': 'application/json',
     }
   })
-    .then(res => res.json())
-    .then(json => callback(name))
+    .then(json => callback(playlistName)) //DET ÄR INTE NAMNET SOM SKA VIDARE, DET ÄR ID PÅ SPELLISTA
     .catch(err => console.log(err))
 }
 
 // LÄGG TILL LÅTAR I SPELLISTA
-function addTracksToPlaylist(username, playlist, tracks, token, callback) {
-  console.log('addTracksToPlaylist', username, playlist, tracks);
-  var url = 'https://api.spotify.com/v1/users/' + username +
-    '/playlists/' + playlist +
-    '/tracks';
+function addTracksToPlaylist(userId, playlistName, token, callback) {
+  console.log('addTracksToPlaylist', userId, playlistName);
+  var url = 'https://api.spotify.com/v1/users/' + userId + '/playlists/' + playlistName + '/tracks';
 
   fetch(url, {
     method: 'POST',
     body: JSON.stringify({
-      name: playlist,
+      user_id: userId,
+      playlist_id: playlistName,
       public: 'true'
     }),
     headers: {
@@ -206,6 +202,5 @@ function addTracksToPlaylist(username, playlist, tracks, token, callback) {
     .catch(err => console.log(err))
 }    
 
-app.listen(3000);
 console.log('Listening on port' + port);
 app.listen(port);
