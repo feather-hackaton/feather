@@ -5,18 +5,18 @@ var clientSecret = 'b32fc738eeee408d906cf084d20359c9';
 var redirectUri = 'http://localhost:3000/callback';
 
 
-   function Secret() {}
-   
-   Secret.prototype.getClientId = function() {
-       return clientId;
-   };
-   
-   Secret.prototype.getClientSecret = function() {
-       return clientSecret;
-   };
+var Secret = function () { }
 
-   Secret.prototype.getRedirectUri = function() {
-       return redirectUri;
-   }
-   
+Secret.prototype.getClientId = function () {
+    return clientId;
+};
+
+Secret.prototype.getClientSecret = function () {
+    return clientSecret;
+};
+
+Secret.prototype.getRedirectUri = function () {
+    return redirectUri;
+};
+
 exports.Secret = Secret;

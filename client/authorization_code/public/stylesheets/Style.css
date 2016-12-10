@@ -3,7 +3,7 @@ body{
   background-size: cover;
   background-color: rgba(0,0,0,0.5);
   background-blend-mode: darken;
-  background-image: url("../pictures/Autumn.jpg");
+  background-image: url("../Pictures/Autumn.jpg");
   overflow: hidden;
 }
 #subtitle{

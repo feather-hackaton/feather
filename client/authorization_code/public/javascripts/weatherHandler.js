@@ -1,13 +1,9 @@
-
-$(document).ready(function() {
-  weather();
+$(document).ready(function () {
+  navigator.geolocation.getCurrentPosition(function (position) {
+    return loadWeather(position.coords.latitude + ',' + position.coords.longitude);
+  });
 });
 
-var getWeather = () => {
-  navigator.geolocation.getCurrentPosition(function(position) {
-    return loadWeather(position.coords.latitude+','+position.coords.longitude);
-  });
-}
 
 function loadWeather(location, woeid) {
   $.simpleWeather({
@@ -23,6 +19,7 @@ function loadWeather(location, woeid) {
       html += '<i id="weatherinfo" class="material-icons prefix">'+returnWeatherIcon(weather.currently)+'</i>';
 
       $("#weather").html(html);
+      currentWeather = weather.currently;
       return weather.currently;
     },
     error: function(error) {
@@ -38,18 +35,20 @@ function returnWeatherIcon(desc){
     var checkRain = /rain|drizzle|shower|thunder/i;
     var checkFog = /haze|foggy|smoky|fog/i;
 
-    if(checkClouds.test(desc))
+    if(checkClouds.test(desc)){
         document.body.style.backgroundImage="url('../Pictures/Cloudy.jpg')";
         return "cloud"
-    if(checkFair.test(desc))
+    }
+    if(checkFair.test(desc)){
         document.body.style.backgroundImage="url('../Pictures/Sunny.jpg')";
         return "wb sunny"
-    if(checkRain.test(desc))
+    }
+    if(checkRain.test(desc)){
         document.body.style.backgroundImage="url('../Pictures/Rainy.jpg')";
         return "grain"
-    if(checkFog.test(desc))
+    }
+    if(checkFog.test(desc)){
         document.body.style.backgroundImage="url('../Pictures/Cloudy.jpg')";
         return "cloud"
+    }
 }
-
-export{getWeather};
