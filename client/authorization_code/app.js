@@ -6,15 +6,11 @@
  * For more information, read
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
-var axios = require('axios');
 const fetch = require('isomorphic-fetch');
 var Weather = require('./public/javascripts/Weather.js').Weather;
 var Secret = require('../../DAL/secret.js').Secret;
 var weather = new Weather();
 var secret = new Secret();
-
-var PlaylistCreator = require('../../DAL/playlistCreator/playlistCreator.js').PlaylistCreator;
-var playlistCreator = new PlaylistCreator(); 
 
 var port = 3001;
 
@@ -67,8 +63,6 @@ app.get('/login', function (req, res) {
 });
 
 app.get('/callback', function (req, res) {
-
-  console.log(playlistCreator.doSearch('sun', null));
   // your application requests refresh and access tokens
   // after checking the state parameter
 
@@ -96,9 +90,7 @@ app.get('/callback', function (req, res) {
       json: true
     };
 
-    /**
-     * After auth and you are logged in.
-     */
+    
     request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
 
@@ -118,24 +110,17 @@ app.get('/callback', function (req, res) {
 
           var id = response.body['id'];
 
-          console.log("detta är id :" + id);
-
           if (id != null) {
-            console.log("Detta är inte null");
-            createPlaylist(id, "feather", access_token, function (playlist) {
-
+            createPlaylist(id, "Feather-Feel the weather", access_token, function (playlist) {
               console.log('created playlist', playlist);
-              console.log("Vädret är följande:" + weather.getWeather());
-              /*addTracksToPlaylist(id, playlist, function (r) {
+              console.log("Vädret är följande:" );
+              addTracksToPlaylist(id, playlist, access_token, function (r) {
                 console.log('tracks added.');
                
-              });*/
+              });
             });
           }
         });
-
-
-
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -178,17 +163,14 @@ app.get('/refresh_token', function (req, res) {
 });
 
 // SKAPA SPELLISTA
-function createPlaylist(username, name, token, callback) {
-  console.log('createPlaylist', username, "feather");
-  var url = 'https://api.spotify.com/v1/users/' + username +
-    '/playlists';
-
-  console.log(token)
+function createPlaylist(username, name, token, callback) { 
+  console.log('PLAYLIST: ', username, "Feather-Feel the weather");
+  var url = 'https://api.spotify.com/v1/users/' + username + '/playlists';
 
   fetch(url, {
     method: 'POST',
     body: JSON.stringify({
-      name: 'Feather-Feel the weather',
+      name: name,
       public: 'true'
     }),
     headers: {
@@ -197,12 +179,12 @@ function createPlaylist(username, name, token, callback) {
     }
   })
     .then(res => res.json())
-    .then(json => console.log(json))
+    .then(json => callback(name))
     .catch(err => console.log(err))
 }
 
 // LÄGG TILL LÅTAR I SPELLISTA
-function addTracksToPlaylist(username, playlist, tracks, callback) {
+function addTracksToPlaylist(username, playlist, tracks, token, callback) {
   console.log('addTracksToPlaylist', username, playlist, tracks);
   var url = 'https://api.spotify.com/v1/users/' + username +
     '/playlists/' + playlist +
@@ -211,7 +193,7 @@ function addTracksToPlaylist(username, playlist, tracks, callback) {
   fetch(url, {
     method: 'POST',
     body: JSON.stringify({
-      name: 'Feather-Feel the weather',
+      name: playlist,
       public: 'true'
     }),
     headers: {
@@ -222,26 +204,7 @@ function addTracksToPlaylist(username, playlist, tracks, callback) {
     .then(res => res.json())
     .then(json => console.log(json))
     .catch(err => console.log(err))
-}
-
-
-/*$.ajax(url, {
-  method: 'POST',
-  data: JSON.stringify(tracks),
-  dataType: 'text',
-  headers: {
-    'Authorization': 'Bearer ' + g_access_token,
-    'Content-Type': 'application/json'
-  },
-  success: function (r) {
-    console.log('add track response', r);
-    callback(r.id);
-  },
-  error: function (r) {
-    callback(null);
-  }
-});*/
-    
+}    
 
 app.listen(3000);
 console.log('Listening on port' + port);
