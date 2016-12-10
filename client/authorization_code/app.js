@@ -6,7 +6,11 @@
  * For more information, read
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
+var axios = require('axios');
+const fetch = require('isomorphic-fetch');
+var Weather = require('./public/javascripts/Weather.js').Weather;
 var Secret = require('../../DAL/secret.js').Secret;
+var weather = new Weather();
 var secret = new Secret();
 var port = 3001;
 
@@ -24,7 +28,7 @@ var redirect_uri = secret.getRedirectUri(); // Your redirect uri
  * @param  {number} length The length of the string
  * @return {string} The generated string
  */
-var generateRandomString = function(length) {
+var generateRandomString = function (length) {
   var text = '';
   var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -39,15 +43,15 @@ var stateKey = 'spotify_auth_state';
 var app = express();
 
 app.use(express.static(__dirname + '/public'))
-   .use(cookieParser());
+  .use(cookieParser());
 
-app.get('/login', function(req, res) {
+app.get('/login', function (req, res) {
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private playlist-read-private playlist-modify-public';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -58,7 +62,7 @@ app.get('/login', function(req, res) {
     }));
 });
 
-app.get('/callback', function(req, res) {
+app.get('/callback', function (req, res) {
 
   // your application requests refresh and access tokens
   // after checking the state parameter
@@ -90,11 +94,11 @@ app.get('/callback', function(req, res) {
     /**
      * After auth and you are logged in.
      */
-    request.post(authOptions, function(error, response, body) {
+    request.post(authOptions, function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        
+
         var access_token = body.access_token,
-            refresh_token = body.refresh_token;
+          refresh_token = body.refresh_token;
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -102,10 +106,31 @@ app.get('/callback', function(req, res) {
           json: true
         };
 
+
+
         // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          console.log(body);
+        request.get(options, function (error, response, body) {
+
+          var id = response.body['id'];
+
+          console.log("detta är id :" + id);
+
+          if (id != null) {
+            console.log("Detta är inte null");
+            createPlaylist(id, "feather", access_token, function (playlist) {
+
+              console.log('created playlist', playlist);
+              console.log("Vädret är följande:" + weather.getWeather());
+              /*addTracksToPlaylist(id, playlist, function (r) {
+                console.log('tracks added.');
+               
+              });*/
+            });
+          }
         });
+
+
+
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -123,7 +148,7 @@ app.get('/callback', function(req, res) {
   }
 });
 
-app.get('/refresh_token', function(req, res) {
+app.get('/refresh_token', function (req, res) {
 
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
@@ -137,7 +162,7 @@ app.get('/refresh_token', function(req, res) {
     json: true
   };
 
-  request.post(authOptions, function(error, response, body) {
+  request.post(authOptions, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
       res.send({
@@ -147,6 +172,72 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+// SKAPA SPELLISTA
+function createPlaylist(username, name, token, callback) {
+  console.log('createPlaylist', username, "feather");
+  var url = 'https://api.spotify.com/v1/users/' + username +
+    '/playlists';
+
+  console.log(token)
+
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify({
+      name: 'Feather-Feel the weather',
+      public: 'true'
+    }),
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(res => res.json())
+    .then(json => console.log(json))
+    .catch(err => console.log(err))
+}
+
+// LÄGG TILL LÅTAR I SPELLISTA
+function addTracksToPlaylist(username, playlist, tracks, callback) {
+  console.log('addTracksToPlaylist', username, playlist, tracks);
+  var url = 'https://api.spotify.com/v1/users/' + username +
+    '/playlists/' + playlist +
+    '/tracks';
+
+  fetch(url, {
+    method: 'POST',
+    body: JSON.stringify({
+      name: 'Feather-Feel the weather',
+      public: 'true'
+    }),
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(res => res.json())
+    .then(json => console.log(json))
+    .catch(err => console.log(err))
+}
+
+
+/*$.ajax(url, {
+  method: 'POST',
+  data: JSON.stringify(tracks),
+  dataType: 'text',
+  headers: {
+    'Authorization': 'Bearer ' + g_access_token,
+    'Content-Type': 'application/json'
+  },
+  success: function (r) {
+    console.log('add track response', r);
+    callback(r.id);
+  },
+  error: function (r) {
+    callback(null);
+  }
+});*/
+    
+
 app.listen(3000);
-console.log('Listening on port'+port);
+console.log('Listening on port' + port);
 app.listen(port);

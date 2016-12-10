@@ -4,7 +4,7 @@ body{
   background-color: rgba(0,0,0,0.5);
   background-blend-mode: darken;
   background-image: url("../pictures/Autumn.jpg");
-  overflow: scroll-y;
+  overflow: hidden;
 }
 #subtitle{
   margin:0;
@@ -13,6 +13,20 @@ body{
   font-size: 16px;
 }
 
+#weatherinfo{
+  margin:3%;
+  color: white;
+  font-size: 26px;
+}
+
+
+#usertext{
+  margin:3%;
+  color: white;
+  font-size: 26px;
+}
+
+
 #title{
   font-weight: bolder;
   font-size: 64px;
@@ -20,16 +34,15 @@ body{
   color: white;
   letter-spacing:8px;
 }
-
+#container{
+  text-align: center;
+}
 
 
 #maindiv{
   border: solid #fff 5px;
   text-align: center;
   height:20vh;
-  width: 80vh;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 #login{
@@ -45,11 +58,9 @@ body{
   font-weight: bold;
   border: solid #fff 3px;
 }
-/*
-#footer{
-  position: absolute;
-  bottom:0;
-  height: 10vh;
-  opacity: 0.8;
 
-}*/
+#spotifyplayer{
+  background-color: rgba(0,0,0,0.7);
+  background-blend-mode: darken;
+  height: calc(100vh - 35vh);
+}
