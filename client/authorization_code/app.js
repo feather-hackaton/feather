@@ -112,8 +112,8 @@ app.get('/callback', function (req, res) {
 
           if (userId != null) {
             createPlaylist(userId, "Feather-Feel the weather", access_token, function (playlist) {
+              console.log("Efter callback");
               console.log('created playlist', playlist);
-              console.log("Vädret är följande:" );
               addTracksToPlaylist(userId, playlist, access_token, function (r) {
                 console.log('tracks added.');
               });
@@ -164,7 +164,7 @@ app.get('/refresh_token', function (req, res) {
 // SKAPA SPELLISTA
 function createPlaylist(username, playlistName, token, callback) { 
   var url = 'https://api.spotify.com/v1/users/' + username + '/playlists/';
-
+  console.log("Före callback")
   fetch(url, {
     method: 'POST',
     body: JSON.stringify({
@@ -175,7 +175,7 @@ function createPlaylist(username, playlistName, token, callback) {
       'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json',
     }
-  })
+  })  
     .then(json => callback(playlistName)) //DET ÄR INTE NAMNET SOM SKA VIDARE, DET ÄR ID PÅ SPELLISTA
     .catch(err => console.log(err))
 }
@@ -183,13 +183,11 @@ function createPlaylist(username, playlistName, token, callback) {
 // LÄGG TILL LÅTAR I SPELLISTA
 function addTracksToPlaylist(userId, playlistName, token, callback) {
   console.log('addTracksToPlaylist', userId, playlistName);
-  var url = 'https://api.spotify.com/v1/users/' + userId + '/playlists/' + playlistName + '/tracks';
-
+  var url = 'https://api.spotify.com/v1/users/'+userId+'/playlists'
   fetch(url, {
-    method: 'POST',
+    method: 'GET',
     body: JSON.stringify({
       user_id: userId,
-      playlist_id: playlistName,
       public: 'true'
     }),
     headers: {
@@ -198,7 +196,7 @@ function addTracksToPlaylist(userId, playlistName, token, callback) {
     }
   })
     .then(res => res.json())
-    .then(json => console.log(json))
+    .then(json => console.log(json.items[0])) //första spellistan
     .catch(err => console.log(err))
 }    
 
