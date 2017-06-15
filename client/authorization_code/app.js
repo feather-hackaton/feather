@@ -112,7 +112,6 @@ app.get('/callback', function (req, res) {
 
           if (userId != null) {
             createPlaylist(userId, "Feather-Feel the weather", access_token, function (playlist) {
-              console.log("Efter callback");
               console.log('created playlist', playlist);
               addTracksToPlaylist(userId, playlist, access_token, function (r) {
                 console.log('tracks added.');
@@ -164,22 +163,40 @@ app.get('/refresh_token', function (req, res) {
 // SKAPA SPELLISTA
 function createPlaylist(username, playlistName, token, callback) { 
   var url = 'https://api.spotify.com/v1/users/' + username + '/playlists/';
-  console.log("Före callback")
-  fetch(url, {
-    method: 'POST',
+  
+
+  var _url = 'https://api.spotify.com/v1/users/'+userId+'/playlists'
+  fetch(_url, {
+    method: 'GET',
     body: JSON.stringify({
-      name: playlistName,
+      user_id: userId,
       public: 'true'
     }),
     headers: {
       'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json',
     }
-  })  
-    .then(json => callback(playlistName)) //DET ÄR INTE NAMNET SOM SKA VIDARE, DET ÄR ID PÅ SPELLISTA
-    .catch(err => console.log(err))
+  })
+    .then(res => res.json())
+    //.then(json => console.log(json.items[0].id))
+  if(json.items[0].name != "Feather-Feel the weather"){
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        name: playlistName,
+        public: 'true'
+      }),
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      }
+    })  
+      .then(json => callback(playlistName)) //DET ÄR INTE NAMNET SOM SKA VIDARE, DET ÄR ID PÅ SPELLISTA
+      .catch(err => console.log(err))
+  }else{
+    console.log("Feather list already exists. Fix this some day..")
+  }
 }
-
 // LÄGG TILL LÅTAR I SPELLISTA
 function addTracksToPlaylist(userId, playlistName, token, callback) {
   console.log('addTracksToPlaylist', userId, playlistName);
@@ -196,8 +213,8 @@ function addTracksToPlaylist(userId, playlistName, token, callback) {
     }
   })
     .then(res => res.json())
-    .then(json => console.log(json.items[0])) //första spellistan
-    .catch(err => console.log(err))
+    .then(json => console.log(json.items[0].id)) //första spellistans id, det här kommer att vara Feather, då den skapas och alltid placeras högst upp.
+    .catch(err => console.log(err))              //Nu är det bara att shuffla in låtar på spellistans ID https://api.spotify.com/v1/users/'+userId+'/playlists/+json.items[0].id
 }    
 
 console.log('Listening on port' + port);
